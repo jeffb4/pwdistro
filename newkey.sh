@@ -21,6 +21,7 @@ Passphrase: $PASSPHRASE
 EOF
 )
 
+mkdir -p pubkeys
 gpg --armor --export $KEY > pubkeys/$USER
 
 echo "Completed, Key $KEY exported to pubkeys/$USER"
