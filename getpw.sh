@@ -1,5 +1,7 @@
 #!/bin/sh
 
+DIR=$( cd -P -- "$(dirname -- "$(command -v -- "$_")")" && pwd -P )
+
 # Should we be formatting a password for output?
 if [[ $1 = '-fmt' ]]; then
   read PWID
@@ -30,7 +32,7 @@ Comment: $COMMENT
 EOF
 else
 # Retrieve all keys and check for those desired
-  for p in passwords/$USER/*; do
+  for p in $DIR/passwords/$USER/*; do
     gpg --use-agent --batch -q --decrypt $p | $0 -fmt $1
   done
 fi

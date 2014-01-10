@@ -1,5 +1,7 @@
 #!/bin/sh
 
+DIR=$( cd -P -- "$(dirname -- "$(command -v -- "$_")")" && pwd -P )
+
 # XXX get passphrase. Easier than passing fd0 prompt to gpg
 echo "Generating a new private/public key pair"
 echo -n "Passphrase: "
@@ -21,10 +23,9 @@ Passphrase: $PASSPHRASE
 EOF
 )
 
-mkdir -p pubkeys; chmod 700 pubkeys
+mkdir -p $DIR/pubkeys; chmod 700 $DIR/pubkeys
 
-gpg --armor --export $KEY > pubkeys/$USER
+gpg --armor --export $KEY > $DIR/pubkeys/$USER
 
-echo "Completed, Key $KEY exported to pubkeys/$USER"
+echo "Completed, Key $KEY exported to $DIR/pubkeys/$USER"
 
-# egrep "gpg: key \S+ marked as ultimately trusted" <<EOF
