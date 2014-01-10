@@ -49,10 +49,6 @@ update
 addpw.sh - Give an option to restrict the users to whom a password
 is distributed
 
-All scripts currently assume they are being run from within the
-pwdistro repository. They should be changed to determine the
-directory they are stored in.
-
 SECURITY CONCERNS
 
 A user with access to the git repository can add themselves to
