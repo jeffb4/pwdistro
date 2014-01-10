@@ -1,0 +1,63 @@
+Secure password distribution (pwdistro) using GPG,
+by Jeff Bachtel (Berico Technologies)
+
+Introduction
+
+This is a series of scripts that handle securely distributing
+passwords to multiple authorized recipients using GnuPG
+and a repository software such as git.
+
+It does this by maintaining a directory of exported public
+keys, with which it encrypts password information. All passwords
+are given a uuid and are stored via that, no other information
+about the passwords is available in cleartext on the filesystem.
+
+To fetch passwords, all encrypted password files in a user's
+directory (passwords/$USER/) are decrypted and matches to the
+search string are displayed.
+
+Commands
+
+newkey.sh - Generate a new private/public key pair in gpg,
+specifically for this application. The private key is stored in
+the user's normal gpg keyring, and the public key is exported
+into pubkeys/$USER
+
+addpw.sh - Add a password to the database. It runs uuidgen to
+generate a new UUID for the password, then creates encrypted
+files passwords/*/$uuid.asc , each file encrypted with the public
+key of a user
+
+getpw.sh - Get password(s) from the database. It decrypts all
+files in passwords/$USER/* and greps Site/Username/Comment fields
+for a value passed as $1. If no filter value is passed, it returns
+all passwords in the user's database
+
+TODO
+
+grantpw.sh - Grant access to a password to other user(s). For
+instance, if a new employee joins and needs access to all existing
+passwords
+
+revoke.sh - Revoke access to an employee. This can be accomplished
+now by removing their public key from pubkeys/$USER and removing
+the passwords/$USER/ directory
+
+updatepw.sh - Allow a user to update a password and distribute that
+update
+
+addpw.sh - Give an option to restrict the users to whom a password
+is distributed
+
+SECURITY CONCERNS
+
+A user with access to the git repository can add themselves to
+the database of public keys, or change another user's public key
+so that future updates can be intercepted. This could be mitigated
+via a keyserver, local storage of public keys (and prompting on change),
+or git repository write restrictions server-side
+
+A user can overwrite passwords for other users. This can be mitigated
+by using VCS tools to retrieve particular file versions, or limiting
+users to the creation of new files in passwords/* (via server-side
+restrictions)
