@@ -12,12 +12,12 @@ echo -n "Comment: "; read COMMENT
 
 for k in $DIR/pubkeys/*; do
 # add public key to public keyring
-  gpg --armor --import --keyring $KEYRING --no-default-keyring $k
+  gpg --trust-model always --armor --import --keyring $KEYRING --no-default-keyring $k
 # create a destination directory for that user's copy of the password
   mkdir -p $DIR/passwords/$(basename $k)
 # generate a copy of the password data for the user encrypted with their
 # public key
-  gpg --armor -r $(basename $k) --encrypt > $DIR/passwords/$(basename $k)/$PWID <<EOF
+  gpg --trust-model always --armor --keyring $KEYRING --no-default-keyring -r $(basename $k) --encrypt > $DIR/passwords/$(basename $k)/$PWID <<EOF
 $PWID
 $SITE
 $USERNAME
